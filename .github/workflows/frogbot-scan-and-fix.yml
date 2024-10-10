@@ -35,8 +35,7 @@ jobs:
 
       - uses: jfrog/frogbot@v2
         with:
-          oidc-provider-name: carminea-github
-          oidc-audience: carminea-audience
+          oidc-provider-name: github-danny
         env:
           # [Mandatory]
           # JFrog platform URL
