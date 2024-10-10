@@ -33,11 +33,13 @@ jobs:
         with:
           node-version: "16.x"
 
-      - uses: jfrog/setup-jfrog-cli@v4
-    env:
-        JF_URL: https://soleng.jfrog.io 
-    with:
-        oidc-provider-name: github-danny
+      - uses: jfrog/frogbot@v2
+        with:
+          oidc-provider-name: github-danny
+        env:
+          # [Mandatory]
+          # JFrog platform URL
+          JF_URL: https://soleng.jfrog.io
           JFROG_CLI_LOG_LEVEL: "DEBUG"
 
           # [Mandatory if JF_USER and JF_PASSWORD are not provided]
