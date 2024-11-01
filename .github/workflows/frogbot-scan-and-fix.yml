@@ -39,7 +39,7 @@ jobs:
         env:
           # [Mandatory]
           # JFrog platform URL
-          JF_URL: https://soleng.jfrog.io
+          JF_URL: https://${{ vars.JF_URL }}/
           JFROG_CLI_LOG_LEVEL: "DEBUG"
 
           # [Mandatory if JF_USER and JF_PASSWORD are not provided]
@@ -92,7 +92,7 @@ jobs:
 
           # [Optional]
           # JFrog project. Learn more about it here: https://www.jfrog.com/confluence/display/JFROG/Projects
-          JF_PROJECT: ${{ vars.JF_PROJECT }}
+          # JF_PROJECT: ${{ vars.JF_PROJECT }}
 
           # [Optional, default: "TRUE"]
           # Fails the Frogbot task if any security issue is found.
