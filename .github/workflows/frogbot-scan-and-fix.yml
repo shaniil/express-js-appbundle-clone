@@ -35,7 +35,7 @@ jobs:
 
       - uses: jfrog/frogbot@v2
         with:
-          oidc-provider-name: github-danny
+          oidc-provider-name: shani-frogbot-integration
         env:
           # [Mandatory]
           # JFrog platform URL
