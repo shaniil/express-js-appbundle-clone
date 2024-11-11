@@ -90,8 +90,8 @@ jobs:
       
       - name: docker scan
         run: |
-          jf docker pull ${{ vars.JF_URL }}/${{ env.DOCKER_REPO }}/${{ env.IMAGE_NAME }}
-          jf docker scan ${{ vars.JF_URL }}/${{ env.DOCKER_REPO }}/${{ env.IMAGE_NAME }}:latest --vuln --fail=false --watches=shani_ejs_build
+          jf docker pull ${{ vars.JF_URL }}/${{ env.DOCKER_REPO }}/${{ env.IMAGE_NAME }}:${{ github.run_number }}
+          jf docker scan ${{ vars.JF_URL }}/${{ env.DOCKER_REPO }}/${{ env.IMAGE_NAME }}:${{ github.run_number }} --vuln --fail=false --watches=shani_ejs_build
       
       - name: Docker Add Package to Build
         run: |  
