@@ -61,17 +61,17 @@ jobs:
         with:
             oidc-provider-name: shani-frogbot-integration
       
-      - name: NPM Audit 
-        run: |
-          jf npmc --repo-resolve ${{ github.event.inputs.rt_npm_remote_repo_id }}
-          jf npm i --omit dev
+      #- name: NPM Audit 
+      #  run: |
+      #    jf npmc --repo-resolve ${{ github.event.inputs.rt_npm_remote_repo_id }}
+      #    jf npm i --omit dev
           
-          if [ ${{ github.event.inputs.xr_enable_scan }} == 'true' ]; then
-          	echo "Execute Xray scanning ..."
-          	jf audit --npm --fail=${{ github.event.inputs.xr_override_fail_build }} --project=${{ vars.JF_PROJECT }}
-          else
-          	echo "Skip Xray scanning!!!"
-          fi
+     #     if [ ${{ github.event.inputs.xr_enable_scan }} == 'true' ]; then
+     #     	echo "Execute Xray scanning ..."
+     #     	jf audit --npm --fail=${{ github.event.inputs.xr_override_fail_build }} --project=${{ vars.JF_PROJECT }}
+     #     else
+     #     	echo "Skip Xray scanning!!!"
+     #     fi
 
       - name: Docker Authenticate
         uses: docker/login-action@v3
@@ -92,7 +92,12 @@ jobs:
         run: |  
            echo "${{ vars.JF_URL }}/${{ env.DOCKER_REPO }}/${{ env.IMAGE_NAME }}:${{ github.run_number }}@${{ steps.build.outputs.digest }}" > metadata.json
            jf rt build-docker-create ${{ env.DOCKER_REPO }} --image-file metadata.json --project=${{ vars.JF_PROJECT }}
-      
+
+      - name: Npm curation
+        run: |
+           cd npm-example
+           jf npm install
+          
       - name: Publish Build Info
         run: |
           jf rt build-collect-env --project=${{ vars.JF_PROJECT }}
