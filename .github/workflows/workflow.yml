@@ -91,7 +91,7 @@ jobs:
       
       - name: docker scan
         run: |
-          #jf docker pull ${{ vars.JF_URL }}/${{ env.DOCKER_REPO }}/${{ env.IMAGE_NAME }}:${{ github.run_number }}
+          jf docker pull ${{ vars.JF_URL }}/${{ env.DOCKER_REPO }}/${{ env.IMAGE_NAME }}:${{ github.run_number }}
           jf docker scan ${{ vars.JF_URL }}/${{ env.DOCKER_REPO }}/${{ env.IMAGE_NAME }}:${{ github.run_number }} --vuln --fail=false --watches=shani_ejs_build
       
       - name: Docker Add Package to Build
@@ -109,4 +109,4 @@ jobs:
       - name: Build Scan
         if: always()
         run: |            
-          jf build-scan --fail=${{ github.event.inputs.xr_override_fail_build }} --project=${{ vars.JF_PROJECT }}
+          jf build-scan --fail=${{ github.event.inputs.xr_override_fail_build }} --vuln --project=${{ vars.JF_PROJECT }}
