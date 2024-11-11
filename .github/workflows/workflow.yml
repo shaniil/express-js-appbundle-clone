@@ -92,7 +92,7 @@ jobs:
         run: |  
            echo "${{ vars.JF_URL }}/${{ env.DOCKER_REPO }}/${{ env.IMAGE_NAME }}:${{ github.run_number }}@${{ steps.build.outputs.digest }}" > metadata.json
            jf rt build-docker-create ${{ env.DOCKER_REPO }} --image-file metadata.json --project=${{ vars.JF_PROJECT }}
-           jf docker scan ${{ vars.JF_URL }}/${{ env.DOCKER_REPO }}/${{ env.IMAGE_NAME }}:${{ github.run_number }}@${{ steps.build.outputs.digest }} --vuln --project=${{ vars.JF_PROJECT }} --fail=false #--watches=Job-Summary
+           jf docker scan ${{ vars.JF_URL }}/${{ env.DOCKER_REPO }}/${{ env.IMAGE_NAME }}:${{ github.run_number }} --vuln --project=${{ vars.JF_PROJECT }} --fail=false --watches=shani_ejs_build
           
       - name: Publish Build Info
         if: always()
