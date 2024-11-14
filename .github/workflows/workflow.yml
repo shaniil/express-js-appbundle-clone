@@ -60,6 +60,8 @@ jobs:
           #JF_PROJECT: ${{ vars.JF_PROJECT }}
         with:
             oidc-provider-name: shani-frogbot-integration
+            oidc-audience: shani-audience
+            version: latest
       
       - name: NPM Audit 
         run: |
