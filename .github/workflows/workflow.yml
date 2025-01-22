@@ -105,6 +105,8 @@ jobs:
         run: |
           jf rt build-collect-env --project=${{ vars.JF_PROJECT }}
           jf rt build-add-git --project=${{ vars.JF_PROJECT }}
+          echo "${{ vars.JF_URL }}/${{ env.DOCKER_REPO }}/${{ env.IMAGE_NAME }}@${{ steps.build.outputs.digest }}" > metadata.json
+          jf rt build-docker-create ${{ env.DOCKER_REPO }} --image-file metadata.json
           jf rt build-publish --project=${{ vars.JF_PROJECT }}
       
       - name: Build Scan
