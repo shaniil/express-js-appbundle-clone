@@ -48,7 +48,7 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
       - name: Install Node
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
             node-version: 18
       
@@ -65,7 +65,6 @@ jobs:
       
       - name: NPM Audit 
         run: |
-          npm cache clean --force
           jf rt bce 
           jf npmc --repo-resolve ${{ github.event.inputs.rt_npm_remote_repo_id }}
           jf curation-audit
@@ -85,7 +84,7 @@ jobs:
         id: build
         with:
           push: true
-          platforms: linux/amd64,linux/arm64
+          platforms: linux/amd64 #,linux/arm64
           tags: ${{ vars.JF_URL }}/${{ env.DOCKER_REPO }}/${{ env.IMAGE_NAME }}:${{ github.run_number }}
           provenance: false
       
