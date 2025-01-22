@@ -98,7 +98,7 @@ jobs:
           JF_PULL_REQUEST_TITLE_TEMPLATE: "[🐸 Frogbot-Automatic PR] - Aggregated findings"
           # [Optional, default: "TRUE"]
           # Fails the Frogbot task if any security issue is found.
-          JF_GIT_AGGREGATE_FIXES: "TRUE"
+          # JF_GIT_AGGREGATE_FIXES: "TRUE"
           JF_INCLUDE_ALL_VULNERABILITIES: "TRUE" 
           JF_FAIL: "FALSE"
 
