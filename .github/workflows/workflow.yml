@@ -65,6 +65,7 @@ jobs:
       
       - name: NPM Audit 
         run: |
+          npm cache clean --force
           jf rt bce 
           jf npmc --repo-resolve ${{ github.event.inputs.rt_npm_remote_repo_id }}
           jf curation-audit
