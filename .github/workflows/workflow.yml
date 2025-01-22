@@ -61,8 +61,6 @@ jobs:
             oidc-provider-name: shani-frogbot-integration
             oidc-audience: shani-audience
             version: latest
-      #- name: Clear npm cache
-      #  run: npm cache clean --force
       - name: Install specific tslib version
         run: npm install tslib@2.8.1
       - name: NPM Audit 
@@ -105,8 +103,6 @@ jobs:
         run: |
           jf rt build-collect-env --project=${{ vars.JF_PROJECT }}
           jf rt build-add-git --project=${{ vars.JF_PROJECT }}
-          echo "${{ vars.JF_URL }}/${{ env.DOCKER_REPO }}/${{ env.IMAGE_NAME }}@${{ steps.build.outputs.digest }}" > metadata.json
-          jf rt build-docker-create ${{ env.DOCKER_REPO }} --image-file metadata.json
           jf rt build-publish --project=${{ vars.JF_PROJECT }}
       
       - name: Build Scan
