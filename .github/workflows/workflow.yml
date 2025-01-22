@@ -64,6 +64,8 @@ jobs:
             version: latest
       - name: Clear npm cache
         run: npm cache clean --force
+      - name: Install specific tslib version
+        run: npm install tslib@2.3.0
       - name: NPM Audit 
         run: |
           jf rt bce 
