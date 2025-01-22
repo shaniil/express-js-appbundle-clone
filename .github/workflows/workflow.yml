@@ -51,7 +51,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
             node-version: 18
-      
       - name: Setup JFrog CLI 
         uses: jfrog/setup-jfrog-cli@v4
         id: setup-cli
@@ -64,8 +63,8 @@ jobs:
             version: latest
       #- name: Clear npm cache
       #  run: npm cache clean --force
-      #- name: Install specific tslib version
-      #  run: npm install tslib@2.8.1
+      - name: Install specific tslib version
+        run: npm install tslib@2.8.1
       - name: NPM Audit 
         run: |
           jf rt bce 
