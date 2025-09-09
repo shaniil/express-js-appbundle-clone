@@ -4,7 +4,7 @@ FROM node:16.19.0
 # Create app directory
 WORKDIR /usr/src/app
 COPY package*.json ./
-RUN apt-get update && \
+RUN for i in $(seq 1 5); do apt-get update && break || sleep 5; done && \
     apt-get install -y curl make ncat && \
     apt-get clean
 RUN curl -fL https://install-cli.jfrog.io | sh
