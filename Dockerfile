@@ -4,11 +4,9 @@ FROM node:16.19.0
 # Create app directory
 WORKDIR /usr/src/app
 COPY package*.json ./
-RUN echo "deb http://deb.debian.org/debian buster main" > /etc/apt/sources.list.d/buster.list && \
-    for i in $(seq 1 5); do apt-get update && break || sleep 5; done && \
+RUN apt-get update && \
     apt-get install -y curl make ncat && \
     apt-get clean
-    
 RUN curl -fL https://install-cli.jfrog.io | sh
 
 # If you are building your code for production
