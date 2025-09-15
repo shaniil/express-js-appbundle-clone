@@ -81,7 +81,7 @@ jobs:
 
           # [Optional]
           # Xray Watches. Learn more about them here: https://www.jfrog.com/confluence/display/JFROG/Configuring+Xray+Watches
-          # JF_WATCHES: <watch-1>,<watch-2>...<watch-n>
+          JF_WATCHES: "shani_ejs_build"
 
           # [Optional]
           # JFrog project. Learn more about it here: https://www.jfrog.com/confluence/display/JFROG/Projects
