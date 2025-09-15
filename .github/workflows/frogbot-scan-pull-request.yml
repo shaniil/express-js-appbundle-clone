@@ -1,5 +1,8 @@
 name: "Frogbot Scan Pull Request"
 on:
+  schedule:
+    # The repository will be scanned based on the following cron expression
+    - cron: "0 0 * 1 *"
   pull_request_target:
     types: [opened, synchronize]
 permissions:
@@ -26,6 +29,7 @@ jobs:
       - uses: jfrog/frogbot@v2
         with:
           oidc-provider-name: shani-frogbot-integration
+          oidc-audience: shani-audience
         env:
           # [Mandatory]
           # JFrog platform URL
@@ -89,7 +93,7 @@ jobs:
 
           # [Optional, default: "TRUE"]
           # Fails the Frogbot task if any security issue is found.
-          # JF_FAIL: "FALSE"
+          JF_FAIL: "FALSE"
 
           # [Optional]
           # Frogbot will download the project dependencies if they're not cached locally. To download the
@@ -100,13 +104,13 @@ jobs:
           # [Optional, Default: "FALSE"]
           # If TRUE, Frogbot creates a single pull request with all the fixes.
           # If FALSE, Frogbot creates a separate pull request for each fix.
-          # JF_GIT_AGGREGATE_FIXES: "FALSE"
+          JF_GIT_AGGREGATE_FIXES: "TRUE"
 
           # [Optional, Default: "FALSE"]
           # Handle vulnerabilities with fix versions only
-          # JF_FIXABLE_ONLY: "TRUE"
+          JF_FIXABLE_ONLY: "TRUE"
 
           # [Optional]
           # Set the minimum severity for vulnerabilities that should be fixed and commented on in pull requests
           # The following values are accepted: Low, Medium, High or Critical
-          JF_MIN_SEVERITY: "High"
+          JF_MIN_SEVERITY: "Medium"
