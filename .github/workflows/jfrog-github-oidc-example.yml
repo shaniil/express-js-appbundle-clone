@@ -15,7 +15,7 @@ jobs:
       - name: Setup JFrog CLI
         uses: jfrog/setup-jfrog-cli@v4
         env:
-          JF_URL: ${{ vars.JF_URL }}
+          JF_URL: http://${{ vars.JF_URL }}
         with:
           oidc-provider-name: shaniil/express-js-appbundle-clone@github
 
