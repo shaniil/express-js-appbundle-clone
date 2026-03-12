@@ -32,6 +32,7 @@ permissions:
   id-token: write         # for creating OIDC tokens for signing
   packages: write         # for uploading attestations
   contents: read          # read the contents permission
+  attestations: write     # Required for attestation
   security-events: write  # for uploading code scanning
 jobs:
   build:
@@ -61,17 +62,29 @@ jobs:
             oidc-provider-name: shani-frogbot-integration
             oidc-audience: shani-audience
             version: latest
-      - name: Install specific tslib version
-        run: npm install tslib@2.8.1
-      - name: NPM Audit 
+      - name: Curation Audit 
         run: |
-          jf rt bce 
-          jf npmc --repo-resolve ${{ github.event.inputs.rt_npm_remote_repo_id }}
+          jf npmc --repo-resolve ${{ github.event.inputs.rt_npm_remote_repo_id }} --repo-deploy shani-npm-local
           jf curation-audit
-          jf npmc --repo-resolve ${{ github.event.inputs.rt_npm_remote_repo_id }}
-          jf npm i --omit dev 
-          jf audit --npm --fail=false --project=${{ vars.JF_PROJECT }}  --secrets --vuln --sast --sca
-
+          
+      - name: NPM Configuration and Build 
+        run: |
+          jf --version
+          #jf npmc --repo-resolve ${{ github.event.inputs.rt_npm_remote_repo_id }} --repo-deploy shani-npm-local
+          jf npm i --omit dev
+          jf npm ci
+          jf npm publish --project=${{ vars.JF_PROJECT }}            
+          #jf audit --npm --fail=false --project=${{ vars.JF_PROJECT }}  --secrets --vuln --sast --sca
+      
+      - name: Xray and Advanced Security Scanning  
+        run: |
+          if [ ${{ github.event.inputs.xr_enable_scan }} == 'true' ]; then
+          	echo "Execute Xray scanning ..."
+          	jf audit --npm --fail=${{ github.event.inputs.xr_override_fail_build }} --project=${{ vars.JF_PROJECT }} --secrets --iac --vuln --sast --sca
+          else
+          	echo "Skip Xray scanning!!!"
+          fi
+          
       - name: Docker Authenticate
         uses: docker/login-action@v3
         with:
@@ -84,19 +97,15 @@ jobs:
         id: build
         with:
           push: true
-          #platforms: linux/amd64 #,linux/arm64
           tags: ${{ vars.JF_URL }}/${{ env.DOCKER_REPO }}/${{ env.IMAGE_NAME }}:${{ github.run_number }}
           provenance: false
-      
-      - name: docker scan
-        run: |
-          jf docker pull ${{ vars.JF_URL }}/${{ env.DOCKER_REPO }}/${{ env.IMAGE_NAME }}:${{ github.run_number }}
-          jf docker scan ${{ vars.JF_URL }}/${{ env.DOCKER_REPO }}/${{ env.IMAGE_NAME }}:${{ github.run_number }} --fail=false --watches=shani_ejs_build --vuln
-      
+            
       - name: Docker Add Package to Build
         run: |  
            echo "${{ vars.JF_URL }}/${{ env.DOCKER_REPO }}/${{ env.IMAGE_NAME }}:${{ github.run_number }}@${{ steps.build.outputs.digest }}" > metadata.json
            jf rt build-docker-create ${{ env.DOCKER_REPO }} --image-file metadata.json --project=${{ vars.JF_PROJECT }}
+           # jf docker scan ${{ vars.JF_URL }}/${{ env.DOCKER_REPO }}/${{ env.IMAGE_NAME }}:${{ github.run_number }}
+           docker image list
           
       - name: Publish Build Info
         if: always()
@@ -106,6 +115,11 @@ jobs:
           jf rt build-publish --project=${{ vars.JF_PROJECT }}
       
       - name: Build Scan
-        if: always()
         run: |            
-          jf build-scan --fail=${{ github.event.inputs.xr_override_fail_build }} --vuln --project=${{ vars.JF_PROJECT }}
+          jf build-scan --fail=${{ github.event.inputs.xr_override_fail_build }} --project=${{ vars.JF_PROJECT }} --vuln
+
+      - name: Attest docker image
+        uses: actions/attest-build-provenance@v2
+        with:
+          subject-name: oci://${{ vars.JF_URL }}/${{ env.DOCKER_REPO }}/${{ env.IMAGE_NAME }}
+          subject-digest: ${{ steps.build.outputs.digest }}
